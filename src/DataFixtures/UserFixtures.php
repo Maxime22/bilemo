@@ -17,10 +17,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $data = [
             "mail"=>["demouser1@hotmail.fr","demouser2@hotmail.fr","demouser3@hotmail.fr", "demouser4@hotmail.fr","demouser5@hotmail.fr"],
+            "firstName"=>["Jean","Maxime","Lucie","Cristin","Thomas"],
+            "lastName"=>["Martin","Dupond","Durand","Milioti","Hobbes"]
         ];
         for ($i = 0; $i < count($data['mail']); $i++) {
             $user = new User();
             $user->setMail($data["mail"][$i]);
+            $user->setFirstName($data["firstName"][$i]);
+            $user->setLastName($data["lastName"][$i]);
             if($i%2===0){
                 $user->setClient($client1);
             }else{

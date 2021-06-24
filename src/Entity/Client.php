@@ -46,11 +46,6 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $updatedAt;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -111,13 +106,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getRoles()
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
+    { }
 
     public function getSalt()
     {
@@ -129,12 +118,5 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(){
         return $this->username;
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 }
