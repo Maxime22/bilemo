@@ -5,9 +5,18 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:Product:collection"}},
+ *     collectionOperations={"get"},
+ *     itemOperations={
+ *         "get"={
+ *             "normalization_context"={"groups"={"read:Product:collection","read:Product:item"}}
+ *         }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
 class Product
@@ -16,38 +25,51 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read:Product:collection"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:Product:collection"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:Product:item"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:Product:item"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:Product:item"})
      */
     private $brand;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"read:Product:item"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"read:Product:item"})
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
