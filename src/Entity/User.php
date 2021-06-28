@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -12,11 +13,35 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     normalizationContext={"groups"={"read:User:collection"}},
  *     denormalizationContext={"groups"={"write:User:item"}},
- *     itemOperations={
- *         "put",
- *         "delete",
+ *     paginationItemsPerPage=2,
+ *     collectionOperations={
  *         "get"={
- *             "normalization_context"={"groups"={"read:User:collection","read:User:item","read:User"}}
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *              }
+ *         },
+ *         "post"={
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *              }
+ *         }
+ *     },
+ *     itemOperations={
+ *         "put"={
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *             }
+ *         },
+ *         "delete"={
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *             }
+ *         },
+ *         "get"={
+ *             "normalization_context"={"groups"={"read:User:collection","read:User:item","read:User"}},
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *             }
  *         }
  *     }
  * )
@@ -34,7 +59,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:User:item","write:User:item"})
+     * @Groups({"read:User:collection","read:User:item","write:User:item"})
      * @Assert\NotBlank
      * @Assert\Email
      */

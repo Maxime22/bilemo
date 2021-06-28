@@ -3,15 +3,40 @@ security:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        app_client_provider:
+            entity:
+                class: App\Entity\Client
+                property: username
+        jwt:
+            lexik_jwt: ~
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: users_in_memory
 
+        login:
+            pattern:  ^/api/login
+            provider: app_client_provider
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            provider: jwt
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+        # main:
+        #   lazy: true
+        #   provider: app_client_provider
+        #   json_login:
+        #       check_path: login_check
+                
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -23,6 +48,11 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # TODO => remettre fully quand on sera plus en test sur /api
+        # - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/products,       roles: IS_AUTHENTICATED_FULLY }
     
     password_hashers:
         App\Entity\Client:

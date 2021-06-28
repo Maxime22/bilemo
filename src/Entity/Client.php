@@ -106,7 +106,10 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getRoles()
-    { }
+    {
+        // argument needed in jwt_authenticator
+        return ['ROLE_USER'];
+    }
 
     public function getSalt()
     {
@@ -114,9 +117,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function eraseCredentials()
-    { }
+    {
+    }
 
-    public function getUserIdentifier(){
+    public function getUserIdentifier()
+    {
         return $this->username;
     }
 }

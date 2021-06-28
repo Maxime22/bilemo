@@ -10,10 +10,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"read:Product:collection"}},
- *     collectionOperations={"get"},
+ *     collectionOperations={
+ *         "get"={
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *             }
+ *          }
+ *     },
  *     itemOperations={
  *         "get"={
- *             "normalization_context"={"groups"={"read:Product:collection","read:Product:item"}}
+ *             "normalization_context"={"groups"={"read:Product:collection","read:Product:item"}},
+ *             "openapi_context"={
+ *                  "security"={{"bearerAuth"={}}}
+ *             }
  *         }
  *     }
  * )
