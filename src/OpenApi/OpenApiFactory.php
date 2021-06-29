@@ -40,6 +40,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         // $openApi->getPaths()->addPath('/ping', new PathItem(null, 'Ping', null, new Operation('ping-id', [], [], "Répond")));
 
         $schemas = $openApi->getComponents()->getSecuritySchemes();
+
         // add authorize bearer in OpenApi to test authorization in the doc directly (we need to add "security"={{"bearerAuth"={}}} in the IRI concerned)
         $schemas['bearerAuth'] = new \ArrayObject([
             'type' => 'http',
@@ -63,7 +64,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             ]
         );
-
         $schemas['Token'] = new \ArrayObject(
             [
                 "type" => "object",
@@ -81,6 +81,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 'schema' => $schemas['Credentials']
             ]
         ]);
+
         $requestBodyOperationToken = new RequestBody('', $contentRequestBodyOperationToken);
 
         $operationToken = new Operation(
@@ -103,6 +104,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             $requestBodyOperationToken
         );
 
+        // our own post operation to explain the api/login parameters we need
         $pathItemLogin = new PathItem(null, null, null, null, null, $operationToken);
 
         $openApi->getPaths()->addPath('/api/login', $pathItemLogin);

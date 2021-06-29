@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     normalizationContext={"groups"={"read:User:collection"}},
  *     denormalizationContext={"groups"={"write:User:item"}},
- *     paginationItemsPerPage=2,
  *     collectionOperations={
  *         "get"={
  *             "openapi_context"={
