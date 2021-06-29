@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"write:User:item"}},
  *     collectionOperations={
  *         "get"={
+ *             "formats"={"jsonhal"={"application/hal+json"}},
  *             "openapi_context"={
  *                  "security"={{"bearerAuth"={}}}
  *              }
@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             }
  *         },
  *         "get"={
+ *             "formats"={"jsonhal"={"application/hal+json"}},
  *             "normalization_context"={"groups"={"read:User:collection","read:User:item","read:User"}},
  *             "openapi_context"={
  *                  "security"={{"bearerAuth"={}}}
@@ -77,7 +78,7 @@ class User
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class)
+     * @ORM\ManyToOne(targetEntity=Client::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"read:User:item"})
      */
@@ -85,11 +86,15 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:User:collection","read:User:item","write:User:item"})
+     * @Assert\NotBlank
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:User:collection","read:User:item","write:User:item"})
+     * @Assert\NotBlank
      */
     private $lastName;
 

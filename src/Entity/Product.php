@@ -9,6 +9,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     paginationItemsPerPage = 5,
+ *     formats={"jsonhal"={"application/hal+json"}},
  *     normalizationContext={"groups"={"read:Product:collection"}},
  *     collectionOperations={
  *         "get"={

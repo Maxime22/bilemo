@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  * 
  */
-class Client implements UserInterface, PasswordAuthenticatedUserInterface
+class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     /**
      * @ORM\Id
@@ -55,6 +56,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self{
+        $this->id = $id;
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -123,5 +129,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier()
     {
         return $this->username;
+    }
+
+    public static function createFromPayload($id, array $payload){
+        $client = new Client();
+        $client->setId($id)->setUsername($payload['username']);
+        return $client;
     }
 }
