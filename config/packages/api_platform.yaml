@@ -6,7 +6,6 @@ api_platform:
     swagger:
         versions: [3]
     formats:
-        jsonld:   ['application/ld+json']
         jsonhal:  ['application/hal+json']
         json:     ['application/json']
         html:     ['text/html']

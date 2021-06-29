@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"write:User:item"}},
  *     collectionOperations={
  *         "get"={
- *             "formats"={"jsonhal"={"application/hal+json"}},
  *             "openapi_context"={
  *                  "security"={{"bearerAuth"={}}}
  *              }
@@ -37,7 +36,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             }
  *         },
  *         "get"={
- *             "formats"={"jsonhal"={"application/hal+json"}},
  *             "normalization_context"={"groups"={"read:User:collection","read:User:item","read:User"}},
  *             "openapi_context"={
  *                  "security"={{"bearerAuth"={}}}
