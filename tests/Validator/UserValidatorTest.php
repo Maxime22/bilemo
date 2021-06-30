@@ -34,33 +34,39 @@ class UserValidatorTest extends KernelTestCase
         $this->assertHasErrors($user);
     }
 
-    /* public function testShortTitleTrick()
+    public function testWrongMailUser()
     {
-        $trick = $this->getValidEntity()->setTitle("He");
-        $this->assertHasErrors($trick, 1);
-    } */
-
-    /* public function testShortContentTrick()
-    {
-        $trick = $this->getValidEntity()->setContent("Blabla");
-        $this->assertHasErrors($trick, 1);
+        $user = $this->getValidEntity()->setMail("demo666hotmail.fr");
+        $this->assertHasErrors($user, 1);
     }
 
-    public function testInvalidBlankTitleTrick()
+    public function testBlankMailUser()
     {
-        $trick = $this->getValidEntity()->setTitle("");
-        $this->assertHasErrors($trick, 1);
+        $user = $this->getValidEntity()->setMail("");
+        $this->assertHasErrors($user, 1);
     }
 
-    public function testInvalidBlankContentTrick()
+    public function testShortFirstNameUser()
     {
-        $trick = $this->getValidEntity()->setContent("");
-        $this->assertHasErrors($trick, 1);
+        $user = $this->getValidEntity()->setFirstName("A");
+        $this->assertHasErrors($user, 1);
     }
 
-    // test the unicity of the slug
-    public function testInvalidUsedSlugTrick(){
-        $trick = $this->getValidEntity()->setSlug("le-180");
-        $this->assertHasErrors($trick, 1);
-    } */
+    public function testBlankFirstNameUser()
+    {
+        $user = $this->getValidEntity()->setFirstName("");
+        $this->assertHasErrors($user, 1);
+    }
+
+    public function testShortLastNameUser()
+    {
+        $user = $this->getValidEntity()->setLastName("A");
+        $this->assertHasErrors($user, 1);
+    }
+
+    public function testBlankLastNameUser()
+    {
+        $user = $this->getValidEntity()->setLastName("");
+        $this->assertHasErrors($user, 1);
+    }
 }

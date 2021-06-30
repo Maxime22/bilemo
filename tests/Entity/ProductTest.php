@@ -46,6 +46,12 @@ class ProductTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
+    public function testGetOneProductWithoutAuthentication()
+    {
+        $this->client->request('GET', '/api/products/1');
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+    }
+
     public function testGetOneProductWithAuthentication()
     {
         $this->client->request(
@@ -61,6 +67,4 @@ class ProductTest extends ApiTestCase
         );
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
-
-    // TODO ALLER UN PEU PLUS LOIN QUE HTTP RESPONSE OK EN EXPLIQUANT CE QU'ON ATTEND DE LA REPONSE
 }

@@ -10,10 +10,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("username")
  */
 class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
@@ -26,14 +28,16 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUs
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"read:User:item"})
-     * @Assert\NotBlank
+     * @Assert\Length(min=3)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
+     * @Assert\NotBlank
      */
     private $password;
 

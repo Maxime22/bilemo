@@ -86,14 +86,14 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read:User:collection","read:User:item","write:User:item"})
-     * @Assert\NotBlank
+     * @Assert\Length(min=2)
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read:User:collection","read:User:item","write:User:item"})
-     * @Assert\NotBlank
+     * @Assert\Length(min=2)
      */
     private $lastName;
 
