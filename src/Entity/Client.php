@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
- * 
+ * @ORM\HasLifecycleCallbacks()
  */
 class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
@@ -104,9 +104,12 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUs
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }
