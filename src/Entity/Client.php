@@ -5,16 +5,19 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
- * 
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("username")
  */
-class Client implements UserInterface, PasswordAuthenticatedUserInterface
+class Client implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     /**
      * @ORM\Id
@@ -25,14 +28,16 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"read:User:item"})
-     * @Assert\NotBlank
+     * @Assert\Length(min=3)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -55,6 +60,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self{
+        $this->id = $id;
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -98,9 +108,12 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }
@@ -123,5 +136,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier()
     {
         return $this->username;
+    }
+
+    public static function createFromPayload($id, array $payload){
+        $client = new Client();
+        $client->setId($id)->setUsername($payload['username']);
+        return $client;
     }
 }

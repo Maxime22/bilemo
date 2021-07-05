@@ -8,7 +8,8 @@ security:
                 class: App\Entity\Client
                 property: username
         jwt:
-            lexik_jwt: ~
+            lexik_jwt:
+                class: App\Entity\Client
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

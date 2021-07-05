@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -45,6 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class User
 {
@@ -77,7 +77,7 @@ class User
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class)
+     * @ORM\ManyToOne(targetEntity=Client::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"read:User:item"})
      */
@@ -85,11 +85,15 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:User:collection","read:User:item","write:User:item"})
+     * @Assert\Length(min=2)
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:User:collection","read:User:item","write:User:item"})
+     * @Assert\Length(min=2)
      */
     private $lastName;
 
@@ -133,9 +137,12 @@ class User
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }
