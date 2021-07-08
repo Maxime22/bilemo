@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     cacheHeaders={"max_age"=3600, "shared_max_age"=3600, "vary"={"Authorization"}},
  *     paginationItemsPerPage = 5,
  *     normalizationContext={"groups"={"read:Product:collection"}},
  *     collectionOperations={
